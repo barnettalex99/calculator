@@ -3,7 +3,8 @@ let calculator = {
     currentNum1: null,
     currentNum2: null,
     displayValue: null,
-    currentOperator: ""
+    currentOperator: "",
+    inactivateOperator: false
 };
 
 //sets variables for important DOM components
@@ -39,6 +40,7 @@ function displayEquals(){
     calculatorScreen.textContent = calculator.displayValue;
     calculator.currentNum1 = calculator.displayValue;
     calculator.currentNum2 = null;
+    calculator.inactivateOperator = false;
     calculator.currentOperator = "";
 }
 
@@ -50,62 +52,72 @@ function clearAll(){
     calculator.displayValue = null;
     calculator.currentOperator = "";
     calculatorScreen.textContent = null;
+    calculator.inactivateOperator = false;
 }
 
 //function that sets the numbers of the operation
 function setNum(val){
    if(calculator.currentNum1 == null && calculator.currentOperator == "" ){
-        calculator.currentNum1 = val;
+        calculator.currentNum1 = Number(val);
         calculatorScreen.textContent = calculator.currentNum1;
    }
    else if(calculator.currentNum1 != null && calculator.currentOperator == ""){
-        calculator.currentNum1 = "" + calculator.currentNum1 + val;
+        calculator.currentNum1 = Number("" + calculator.currentNum1 + val);
         calculatorScreen.textContent = calculator.currentNum1;
    }
    else if (calculator.currentNum2 == null && calculator.currentOperator != ""){
-        calculator.currentNum2 = val;
+        calculator.currentNum2 = Number(val);
         calculatorScreen.textContent = calculator.currentNum2;
    }
    else if (calculator.currentNum2 != null && calculator.currentOperator != ""){
-        calculator.currentNum2 = "" + calculator.currentNum2 + val;
+        calculator.currentNum2 = Number("" + calculator.currentNum2 + val);
         calculatorScreen.textContent = calculator.currentNum2;
    }
 }
 
 //sets the operator when the button is clicked
 function setOperation(op){
-    if(op == "add"){
-        calculator.currentOperator = "add";
-        calculatorScreen.textContent = "+";
+    if (calculator.inactivateOperator == false){
+        if(op == "add"){
+            calculator.currentOperator = "add";
+            calculatorScreen.textContent = "+";
+            calculator.inactivateOperator = true;
+        }
+        else if(op == "subtract"){
+            calculator.currentOperator = "subtract";
+            calculatorScreen.textContent = "-";
+            calculator.inactivateOperator = true;
+        }
+        else if (op == "multiply"){
+            calculator.currentOperator = "multiply";
+            calculatorScreen.textContent = "x";
+            calculator.inactivateOperator = true;
+        }
+        else if (op == "divide"){
+            calculator.currentOperator = "divide";
+            calculatorScreen.textContent = "/";
+            calculator.inactivateOperator = true;
+        }
     }
-    else if(op == "subtract"){
-        calculator.currentOperator = "subtract";
-        calculatorScreen.textContent = "-";
-    }
-    else if (op == "multiply"){
-        calculator.currentOperator = "multiply";
-        calculatorScreen.textContent = "x";
-    }
-    else if (op == "divide"){
-        calculator.currentOperator = "divide";
-        calculatorScreen.textContent = "/";
-
+    else{
+        clearAll();
+        calculatorScreen.textContent = "This calculator only takes 2 numbers at a time!"
     }
 }
 
 //allows for the correct operation to be chosen and correct result to be returned
 function operate(){
     if (calculator.currentOperator == "add"){
-        calculator.displayValue = calculator.currentNum1 + calculator.currentNum2;
+        calculator.displayValue = add(calculator.currentNum1, calculator.currentNum2);
     }
     else if (calculator.currentOperator == "subtract"){
-        calculator.displayValue = calculator.currentNum1 - calculator.currentNum2;
+        calculator.displayValue = subtract(calculator.currentNum1, calculator.currentNum2);
     }
     else if (calculator.currentOperator == "multiply"){
-        calculator.displayValue = calculator.currentNum1 * calculator.currentNum2;
+        calculator.displayValue = multiply(calculator.currentNum1, calculator.currentNum2);
     }
     else if (calculator.currentOperator == "divide"){
-        calculator.displayValue = calculator.currentNum1 / calculator.currentNum2;
+        calculator.displayValue = divide(calculator.currentNum1, calculator.currentNum2);
     }
 }
 
